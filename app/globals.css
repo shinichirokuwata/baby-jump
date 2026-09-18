@@ -24,3 +24,130 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Reserved for a future hazard kind (see obstacleTypes.ts's
+   ObstacleCategory) — a faint rotate + sideways settle for a small craft
+   holding a steady course. Not used by anything today (bottle-sway below
+   is what the current catchable uses) but kept so hazard art can reuse it
+   without reinventing the same subtle drift. */
+@keyframes obstacle-wobble {
+  0% {
+    transform: rotate(-1.6deg) translateX(-0.6px);
+  }
+  50% {
+    transform: rotate(1.6deg) translateX(0.6px);
+  }
+  100% {
+    transform: rotate(-1.6deg) translateX(-0.6px);
+  }
+}
+
+.obstacle-wobble {
+  animation: obstacle-wobble 2.6s ease-in-out infinite;
+}
+
+/* Milk bottle's in-flight sway — was the paper airplane's flutter before
+   the art changed to a baby bottle; a bottle shouldn't flap like paper, so
+   this is a gentler, slower rock than the old flutter (smaller rotation
+   swing, slower cycle) — "軽く回転しながら自然に落下する" rather than
+   fluttering or spinning continuously. Still pure CSS (zero per-frame JS
+   cost); each instance gets a negative animation-delay (see Obstacle.tsx)
+   so multiple bottles don't sway in lockstep. Catch detection uses the
+   item's real x/y only — this never touches that. */
+@keyframes bottle-sway {
+  0% {
+    transform: rotate(-8deg) translateX(-2.5px);
+  }
+  50% {
+    transform: rotate(8deg) translateX(2.5px);
+  }
+  100% {
+    transform: rotate(-8deg) translateX(-2.5px);
+  }
+}
+
+.bottle-sway {
+  animation: bottle-sway 2.8s ease-in-out infinite;
+}
+
+/* Space debris' tumble — slower and a wider rotation swing than the paper
+   airplane's flutter, reading as inert metal turning end-over-end rather
+   than something light drifting. Still pure CSS; collision uses the
+   item's real x/y only, same as every other motion layer here. */
+@keyframes debris-tumble {
+  0% {
+    transform: rotate(-10deg) translateX(-2px);
+  }
+  50% {
+    transform: rotate(14deg) translateX(2px);
+  }
+  100% {
+    transform: rotate(-10deg) translateX(-2px);
+  }
+}
+
+.debris-tumble {
+  animation: debris-tumble 3.4s ease-in-out infinite;
+}
+
+/* Solar panel debris' drift — slower and a touch heavier-feeling than the
+   gunmetal shard's tumble (longer cycle, similar-sized swing), reading as
+   a flat, more substantial piece turning lazily rather than a light
+   fragment bouncing around. */
+@keyframes panel-drift {
+  0% {
+    transform: rotate(-8deg) translateX(-1.5px);
+  }
+  50% {
+    transform: rotate(8deg) translateX(1.5px);
+  }
+  100% {
+    transform: rotate(-8deg) translateX(-1.5px);
+  }
+}
+
+.panel-drift {
+  animation: panel-drift 4.8s ease-in-out infinite;
+}
+
+/* Thermal foil debris' flutter — irregular (asymmetric keyframe timing,
+   not a clean back-and-forth) since it's meant to read as light film
+   caught adrift, but still a modest amplitude so it never "ヒラヒラ"s
+   dramatically. */
+@keyframes foil-flutter {
+  0% {
+    transform: rotate(-7deg) translateX(-2px);
+  }
+  30% {
+    transform: rotate(5deg) translateX(1px);
+  }
+  65% {
+    transform: rotate(-9deg) translateX(2px);
+  }
+  100% {
+    transform: rotate(-7deg) translateX(-2px);
+  }
+}
+
+.foil-flutter {
+  animation: foil-flutter 3.9s ease-in-out infinite;
+}
+
+/* Catch feedback ("+1"): a short rise-and-fade near the baby. Purely
+   declarative — the only JS cost is the low-frequency state add/remove in
+   Game.tsx that mounts/unmounts the element (see catchFeedback there),
+   never a per-frame update. */
+@keyframes catch-pop {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-26px);
+    opacity: 0;
+  }
+}
+
+.catch-pop {
+  animation: catch-pop 420ms ease-out forwards;
+}
